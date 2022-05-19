@@ -1,16 +1,28 @@
-# This is a sample Python script.
+import requests
+import lxml.html
+import urllib
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+URL_TO_COUNTRIES = " https://en.wikipedia.org/wiki/List_of_countries_by_population_(United_Nations)"
+XPATH_TO_COUNTRIES = "/html/body/div[3]/div[3]/div[5]/div[1]/table/tbody/tr/td[1]//a[1]/@href"
+
+def format_country_name(country):
+    country = country.replace("_", " ").replace("The ", "")
+    return urllib.parse.unquote(country)
+
+def get_countries(doc):
+    countries = []
+    for element in doc.xpath(XPATH_TO_COUNTRIES):
+        elem_string = str(element).split('/')
+        if not elem_string[0]:
+            countries.append(format_country_name(elem_string[-1]))
+    countries.sort()
+    return countries
 
 
-def main(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+def main():
+    url = requests.get(URL_TO_COUNTRIES)
+    doc = lxml.html.fromstring(url.content)
+    countries = get_countries(doc)
 
-
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    main('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    main()
