@@ -4,6 +4,7 @@ import urllib
 
 URL_TO_COUNTRIES = " https://en.wikipedia.org/wiki/List_of_countries_by_population_(United_Nations)"
 XPATH_TO_COUNTRIES = "/html/body/div[3]/div[3]/div[5]/div[1]/table/tbody/tr/td[1]//a[1]/@href"
+WIKIPEDIA_PREFIX = "https://en.wikipedia.org/wiki/"
 
 def format_country_name(country):
     country = country.replace("_", " ").replace("The ", "")
@@ -18,11 +19,15 @@ def get_countries(doc):
     countries.sort()
     return countries
 
+def get_countries_urls(countries):
+    countries = list(map(lambda country: country.replace(" ", "_"), countries))
+    return [WIKIPEDIA_PREFIX + country for country in countries]
 
 def main():
     url = requests.get(URL_TO_COUNTRIES)
     doc = lxml.html.fromstring(url.content)
     countries = get_countries(doc)
+
 
 if __name__ == '__main__':
     main()
