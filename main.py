@@ -2,9 +2,10 @@ import requests
 import lxml.html
 import urllib
 
+from Entities.Country import Country
+
 URL_TO_COUNTRIES = " https://en.wikipedia.org/wiki/List_of_countries_by_population_(United_Nations)"
 XPATH_TO_COUNTRIES = "/html/body/div[3]/div[3]/div[5]/div[1]/table/tbody/tr/td[1]//a[1]/@href"
-WIKIPEDIA_PREFIX = "https://en.wikipedia.org/wiki/"
 
 def format_country_name(country):
     country = country.replace("_", " ").replace("The ", "")
@@ -15,18 +16,17 @@ def get_countries(doc):
     for element in doc.xpath(XPATH_TO_COUNTRIES):
         elem_string = str(element).split('/')
         if not elem_string[0]:
-            countries.append(format_country_name(elem_string[-1]))
-    countries.sort()
+            name = format_country_name(elem_string[-1])
+            countries.append(Country(name))
     return countries
-
-def get_countries_urls(countries):
-    countries = list(map(lambda country: country.replace(" ", "_"), countries))
-    return [WIKIPEDIA_PREFIX + country for country in countries]
 
 def main():
     url = requests.get(URL_TO_COUNTRIES)
     doc = lxml.html.fromstring(url.content)
     countries = get_countries(doc)
+    for country in countries:
+        country.set_values()
+
 
 
 if __name__ == '__main__':
