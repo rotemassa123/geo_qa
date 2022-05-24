@@ -21,30 +21,34 @@ class Country:
         self.gov_form = self.get_gov_form()
         self.capital = self.get_capital()
 
-
     def get_president_name(self):
         xpath = "/html/body/div[3]/div[3]/div[5]/div[1]/table[1]/tbody/tr[th/div/a/text() = 'President']/td/a/text()"
         for elem in self.doc.xpath(xpath):
             return str(elem)
 
     def get_prime_minister_name(self):
-        xpath = "/html/body/div[3]/div[3]/div[5]/div[1]/table[1]/tbody/tr[th/div/a/text() = 'Prime Minister']/td/a/text()"
+        xpath = "/html/body/div[3]/div[3]/div[5]/div[1]/table[1]/tbody/tr[th/div/a/text() = 'Prime " \
+                "Minister']/td/a/text() "
         for elem in self.doc.xpath(xpath):
             return str(elem)
 
     def get_population(self):
-        xpath = "/html/body/div[3]/div[3]/div[5]/div[1]/table[1]/tbody/tr[th/a/text() ='Population']/following-sibling::*[1]/td/text()"
+        xpath = "/html/body/div[3]/div[3]/div[5]/div[1]/table[1]/tbody/tr[th/a/text() " \
+                "='Population']/following-sibling::*[1]/td/text() "
         for elem in self.doc.xpath(xpath):
             return str(elem)
 
-    def get_area(self):#TODO: need to check about the area being squared!
-        xpath = "/html/body/div[3]/div[3]/div[5]/div[1]/table[1]/tbody/tr[th/a/text() ='Area ']/following-sibling::*[1]/td/text()"
+    def get_area(self):  # TODO: need to check about the area being squared!
+        xpath = "/html/body/div[3]/div[3]/div[5]/div[1]/table[1]/tbody/tr[th/a/text() ='Area ']/following-sibling::*[" \
+                "1]/td/text() "
         for elem in self.doc.xpath(xpath):
             return str(elem)
 
     def get_gov_form(self):
         gov_forms = []
-        xpath = "/html/body/div[3]/div[3]/div[5]/div[1]/table[1]/tbody/tr[th/a/text() ='Area ']/following-sibling::*[1]/td/text()"#TODO: replace bad query!
+        xpath = "/html/body/div[3]/div[3]/div[5]/div[1]/table[1]/tbody/tr[./th/a[text()='Government']]/td/a/text()"
+        "| tr[./th/a[text()='Government']]/td/span/a/text()"
+        "| tr[./th/text()='Government']/td/a/text()" # TODO: replace bad query!
         for elem in self.doc.xpath(xpath):
             gov_forms.append(str(elem))
 
