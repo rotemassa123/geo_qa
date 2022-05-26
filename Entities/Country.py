@@ -1,5 +1,4 @@
-from Entities.PrimeMinister import PrimeMinister
-from Entities.President import President
+from Entities.Person import Person
 import requests
 import lxml.html
 import urllib
@@ -10,8 +9,9 @@ WIKIPEDIA_PREFIX = "https://en.wikipedia.org/wiki/"
 class Country:
     def __init__(self, name):
         self.name = name
-        self.url = WIKIPEDIA_PREFIX + name.replace(" ", "_")
-        self.doc = lxml.html.fromstring(requests.get(self.url).content)
+
+        url = WIKIPEDIA_PREFIX + name.replace(" ", "_")
+        self.doc = lxml.html.fromstring(requests.get(url).content)
 
         self.president = self.get_president()
         self.prime_minister = self.get_prime_minister()
@@ -48,7 +48,7 @@ class Country:
         gov_forms = []
         xpath = "/html/body/div[3]/div[3]/div[5]/div[1]/table[1]/tbody/tr[./th/a[text()='Government']]/td/a/text()"
         "| tr[./th/a[text()='Government']]/td/span/a/text()"
-        "| tr[./th/text()='Government']/td/a/text()" # TODO: replace bad query!
+        "| tr[./th/text()='Government']/td/a/text()"
         for elem in self.doc.xpath(xpath):
             gov_forms.append(str(elem))
 
@@ -60,7 +60,9 @@ class Country:
             return str(elem)
 
     def get_president(self):
-        return
+        name = self.get_president_name()
+        return Person(name) if name else None
 
     def get_prime_minister(self):
-        return None
+        name = self.get_prime_minister_name()
+        return Person(name) if name else None
