@@ -36,13 +36,13 @@ class Country:
         xpath = "/html/body/div[3]/div[3]/div[5]/div[1]/table[1]/tbody/tr[th/a/text() " \
                 "='Population']/following-sibling::*[1]/td/text() "
         for elem in self.doc.xpath(xpath):
-            return str(elem)
+            return str(elem).replace(" ", "")
 
     def get_area(self):  # TODO: need to check about the area being squared!
         xpath = "/html/body/div[3]/div[3]/div[5]/div[1]/table[1]/tbody/tr[th/a/text() ='Area ']/following-sibling::*[" \
                 "1]/td/text() "
         for elem in self.doc.xpath(xpath):
-            return str(elem)
+            return str(elem).replace(" ", "")
 
     def get_gov_form(self):
         gov_forms = []
@@ -50,14 +50,14 @@ class Country:
         "| tr[./th/a[text()='Government']]/td/span/a/text()"
         "| tr[./th/text()='Government']/td/a/text()"
         for elem in self.doc.xpath(xpath):
-            gov_forms.append(str(elem))
+            gov_forms.append(str(elem).replace(" ", "_"))
 
         return gov_forms
 
     def get_capital(self):
         xpath = "/html/body/div[3]/div[3]/div[5]/div[1]/table[1]/tbody/tr[th/text() = 'Capital']/td/a/text()"
         for elem in self.doc.xpath(xpath):
-            return str(elem)
+            return str(elem).replace(" ", "_")
 
     def get_president(self):
         name = self.get_president_name()

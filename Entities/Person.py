@@ -16,9 +16,9 @@ class Person:
     def get_date_of_birth(self):
         xpath = "/html/body/div[3]/div[3]/div[5]/div[1]/table[1]/tbody/tr[th/text() = 'Born']/td/span/span/text()"
         for elem in self.doc.xpath(xpath):
-            return str(elem)
+            return str(elem).replace(" ", "")
 
     def get_birth_loc(self):
         xpath = "/html/body/div[3]/div[3]/div[5]/div[1]/table[1]/tbody/tr[th/text() = 'Born']/td/a/text()"
         for elem in self.doc.xpath(xpath):
-            return str(elem)
+            return str(elem).replace(" ", "_")
