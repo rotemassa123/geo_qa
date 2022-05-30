@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+   xmlns:ns1="http://example.org/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+>
+  <rdf:Description rdf:about="http://example.org/Joe_Biden">
+    <ns1:birth_location>None</ns1:birth_location>
+    <ns1:birth_date>1942-11-20</ns1:birth_date>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/Guam">
+    <ns1:government_form>Presidential_system</ns1:government_form>
+    <ns1:capital>Hag%C3%A5t%C3%B1a</ns1:capital>
+    <ns1:government_form>Devolution</ns1:government_form>
+    <ns1:population>168,801</ns1:population>
+    <ns1:government_form>Constitution</ns1:government_form>
+    <ns1:area>540 km</ns1:area>
+    <ns1:government_form>Dependent_territory</ns1:government_form>
+    <ns1:government_form>Federal_republic</ns1:government_form>
+  </rdf:Description>
+</rdf:RDF>

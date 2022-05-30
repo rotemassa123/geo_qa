@@ -1,0 +1,63 @@
+Saudi_Arabia has no president and no prime minister
+North_Korea has no president and no prime minister
+Switzerland has no president and no prime minister
+Hong_Kong has capital None
+Hong_Kong has no president and no prime minister
+Singapore has capital None
+State_of_Palestine has capital None
+Oman has no president and no prime minister
+Kuwait has no president and no prime minister
+Eritrea has no president and no prime minister
+Bosnia_and_Herzegovina has no president and no prime minister
+R%C3%A9union has capital None
+R%C3%A9union has gov_form: []
+R%C3%A9union has no president and no prime minister
+Macau has capital None
+Macau has no president and no prime minister
+Western_Sahara has capital None
+Western_Sahara has gov_form: []
+Western_Sahara has no president and no prime minister
+Guadeloupe has capital None
+Guadeloupe has gov_form: []
+Guadeloupe has no president and no prime minister
+Martinique has capital None
+Martinique has gov_form: []
+Martinique has no president and no prime minister
+New_Caledonia has no president and no prime minister
+French_Guiana has capital None
+French_Guiana has gov_form: []
+French_Guiana has no president and no prime minister
+French_Polynesia has no president and no prime minister
+Mayotte has capital None
+Mayotte has gov_form: []
+Mayotte has no president and no prime minister
+Channel_Islands has area: None
+Channel_Islands has capital None
+Channel_Islands has gov_form: []
+Channel_Islands has no president and no prime minister
+United_States_Virgin_Islands has no president and no prime minister
+Antigua_and_Barbuda has capital None
+Isle_of_Man has no president and no prime minister
+Cayman_Islands has no president and no prime minister
+Bermuda has no president and no prime minister
+Greenland has no president and no prime minister
+Northern_Mariana_Islands has no president and no prime minister
+Monaco has no president and no prime minister
+Turks_and_Caicos_Islands has no president and no prime minister
+San_Marino has no president and no prime minister
+Gibraltar has no president and no prime minister
+British_Virgin_Islands has no president and no prime minister
+Caribbean_Netherlands has capital None
+Caribbean_Netherlands has gov_form: []
+Caribbean_Netherlands has no president and no prime minister
+Anguilla has no president and no prime minister
+Wallis_and_Futuna has no president and no prime minister
+Saint_Helena,_Ascension_and_Tristan_da_Cunha has no president and no prime minister
+Saint_Pierre_and_Miquelon has no president and no prime minister
+Montserrat has no president and no prime minister
+Falkland_Islands has no president and no prime minister
+Niue has no president and no prime minister
+Tokelau has capital None
+Tokelau has no president and no prime minister
+Vatican_City has capital None
+Vatican_City has no president and no prime minister

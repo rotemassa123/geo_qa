@@ -4,7 +4,7 @@ import lxml.html
 import urllib
 
 WIKIPEDIA_PREFIX = "https://en.wikipedia.org/wiki/"
-
+BASE_QUERY = "//table[contains(@class, 'infobox')]/tbody"
 
 class Country:
     def __init__(self, name):
@@ -22,42 +22,42 @@ class Country:
         self.capital = self.get_capital()
 
     def get_president_name(self):
-        xpath = "/html/body/div[3]/div[3]/div[5]/div[1]/table[1]/tbody/tr[th/div/a/text() = 'President']/td/a/text()"
+        xpath = BASE_QUERY + "/tr[th/div/a/text() = 'President']/td/a/@href" + " | " + BASE_QUERY + "/tr[th/div/a/text() = 'President']/td/span/a[1]/@href"
         for elem in self.doc.xpath(xpath):
-            return str(elem)
+            return str(elem).split("/")[-1]
 
     def get_prime_minister_name(self):
-        xpath = "/html/body/div[3]/div[3]/div[5]/div[1]/table[1]/tbody/tr[th/div/a/text() = 'Prime " \
-                "Minister']/td/a/text() "
+        xpath = BASE_QUERY + "/tr[th/div/a/text() = 'Prime Minister']/td/a/@href "
         for elem in self.doc.xpath(xpath):
-            return str(elem)
+            return str(elem).split("/")[-1]
 
     def get_population(self):
-        xpath = "/html/body/div[3]/div[3]/div[5]/div[1]/table[1]/tbody/tr[th/a/text() " \
-                "='Population']/following-sibling::*[1]/td/text() "
+        xpath = BASE_QUERY + "/tr[th/a/text() ='Population']/following-sibling::*[1]/td//text()" + " | " + BASE_QUERY + "/tr[th/text() ='Population']/following-sibling::*[1]/td//text()" + " | " + BASE_QUERY + "tr[th/text() ='Population']/td//text()"
         for elem in self.doc.xpath(xpath):
-            return str(elem).replace(" ", "")
+            population = str(elem)
+            if not population or population == ' ' or population == ' (' or population == ')'  or '/' in population:
+                continue
+            return population.replace(" ", "")
 
     def get_area(self):  # TODO: need to check about the area being squared!
-        xpath = "/html/body/div[3]/div[3]/div[5]/div[1]/table[1]/tbody/tr[th/a/text() ='Area ']/following-sibling::*[" \
-                "1]/td/text() "
+        xpath = BASE_QUERY + "/tr[th/a/text() ='Area']/following-sibling::*[1]/td/text()" + " | " + BASE_QUERY + "/tr[th/a/text() ='Area ']/following-sibling::*[1]/td/text()" " | " + BASE_QUERY + "/tr[th/text() ='Area']/following-sibling::*[1]/td/text()"
         for elem in self.doc.xpath(xpath):
+            if self.name == 'American_Samoa':
+                return str(elem)[:2]
             return str(elem).replace(" ", "")
 
     def get_gov_form(self):
         gov_forms = []
-        xpath = "/html/body/div[3]/div[3]/div[5]/div[1]/table[1]/tbody/tr[./th/a[text()='Government']]/td/a/text()"
-        "| tr[./th/a[text()='Government']]/td/span/a/text()"
-        "| tr[./th/text()='Government']/td/a/text()"
+        xpath = BASE_QUERY + "/tr[th//text()='Government']/td//a[not(contains(@href,'#cite'))]/@href"
         for elem in self.doc.xpath(xpath):
-            gov_forms.append(str(elem).replace(" ", "_"))
+            gov_forms.append(str(elem).split("/")[-1].replace(" ", "_"))
 
         return gov_forms
 
     def get_capital(self):
-        xpath = "/html/body/div[3]/div[3]/div[5]/div[1]/table[1]/tbody/tr[th/text() = 'Capital']/td/a/text()"
+        xpath = BASE_QUERY + "/tr[th/text() = 'Capital']/td/a/@href" + " | " + BASE_QUERY + "/tr[th/text() = 'Capital']/td/div/ul/li/a[1]/@href"
         for elem in self.doc.xpath(xpath):
-            return str(elem).replace(" ", "_")
+            return str(elem).split("/")[-1].replace(" ", "_")
 
     def get_president(self):
         name = self.get_president_name()
