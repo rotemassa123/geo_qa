@@ -21,11 +21,11 @@ class Person:
             return str(elem).replace(" ", "")
 
     def get_birth_loc(self):
-        xpath = BASE_QUERY + "/tr[th//text()='Born']/td[1]/text()"
+        xpath = "//table[contains(@class, 'infobox')][1]/tbody/tr[th//text()='Born']//td[1]//text()"
         for elem in self.doc.xpath(xpath):
             potential_birth_loc = str(elem).replace(")", "").replace(")", "")
             for val in potential_birth_loc.split(","):
-                val = val.strip()
+                val = val.strip().replace(" ", "_")
                 if val not in self.country_names:
                     continue
-                return str(elem).replace(" ", "_")
+                return val.replace(" ", "_")

@@ -37,13 +37,16 @@ class Country:
             population = str(elem)
             if not population or population == ' ' or population == ' (' or population == ')'  or '/' in population:
                 continue
-            return population.replace(" ", "")
+            population = population.replace(" ", "")
+            return population[:population.index("(")] if "(" in population else population
 
-    def get_area(self):  # TODO: need to check about the area being squared!
-        xpath = BASE_QUERY + "/tr[th/a/text() ='Area']/following-sibling::*[1]/td/text()" + " | " + BASE_QUERY + "/tr[th/a/text() ='Area ']/following-sibling::*[1]/td/text()" " | " + BASE_QUERY + "/tr[th/text() ='Area']/following-sibling::*[1]/td/text()"
+    def get_area(self):
+        xpath = BASE_QUERY + "/tr[th//text()='Area ']/following::td[1]/text()[1]" + " | " + BASE_QUERY + "/tr[th//text()='Area']/following::td[1]/text()[1]" + " | " + BASE_QUERY + "/tr[th//text()='Area']/td/text()[1]"
         for elem in self.doc.xpath(xpath):
             if self.name == 'American_Samoa':
                 return str(elem)[:2]
+            if "km" in str(elem):
+                return str(elem).split("\xa0")[0]
             return str(elem).replace(" ", "")
 
     def get_gov_form(self):

@@ -1,8 +1,6 @@
 import time
-import requests
 import lxml.html
-import urllib
-from rdflib import Graph, Literal, URIRef
+from rdflib import Graph, URIRef
 from Entities.Country import *
 import CountryNames
 
@@ -18,6 +16,7 @@ def get_country(country_name):
     return Country(country_name)
 
 def get_countries(doc):
+    g = Graph()
     countries = {}
     country_names = CountryNames.get_country_names()
 
@@ -25,59 +24,54 @@ def get_countries(doc):
         if not name in countries: #against duplicates
             countries[name] = Country(name)
             print(f"finished fetching {name} data")
+            add_country_to_ontology(g, countries[name])
+            print(f"added {name} data to ontology")
 
+    g.serialize(destination="ontology.nt", format="nt", encoding="utf-8")
     return countries
 
 
 def add_country_to_ontology(g, country):
     country_literal = URIRef(RDF_URI_PREFIX + country.name)
-    g.add((country_literal, URIRef(RDF_URI_PREFIX + "population"), Literal(country.population)))
-    g.add((country_literal, URIRef(RDF_URI_PREFIX + "area"), Literal(country.area)))
-    g.add((country_literal, URIRef(RDF_URI_PREFIX + "capital"), Literal(country.capital)))
+    g.add((country_literal, URIRef(RDF_URI_PREFIX + "population"), URIRef(RDF_URI_PREFIX + country.population)))
+    g.add((country_literal, URIRef(RDF_URI_PREFIX + "area"), URIRef(RDF_URI_PREFIX + country.area)))
+    if country.capital:
+        g.add((country_literal, URIRef(RDF_URI_PREFIX + "capital"), URIRef(RDF_URI_PREFIX + country.capital)))
 
     for form in country.gov_form:
-        g.add((country_literal, URIRef(RDF_URI_PREFIX + "government_form"), Literal(form)))
+        g.add((country_literal, URIRef(RDF_URI_PREFIX + "government_form"), URIRef(RDF_URI_PREFIX + form)))
 
     if country.president:
         president_literal = URIRef(RDF_URI_PREFIX + country.president.name)
-        g.add((president_literal, URIRef(RDF_URI_PREFIX + "birth_location"),
-               Literal(country.president.birth_loc)))
-        g.add((president_literal, URIRef(RDF_URI_PREFIX + "birth_date"),
-               Literal(country.president.date_of_birth)))
+        g.add((president_literal, URIRef(RDF_URI_PREFIX + "president_of"), country_literal))
+        if country.president.birth_loc:
+            g.add((president_literal, URIRef(RDF_URI_PREFIX + "birth_location"),
+                   URIRef(RDF_URI_PREFIX + country.president.birth_loc)))
+        if country.president.date_of_birth:
+            g.add((president_literal, URIRef(RDF_URI_PREFIX + "birth_date"),
+                   URIRef(RDF_URI_PREFIX + country.president.date_of_birth)))
 
     if country.prime_minister:
         prime_minister_literal = URIRef(RDF_URI_PREFIX + country.prime_minister.name)
-        g.add((prime_minister_literal, URIRef(RDF_URI_PREFIX + "birth_location"),
-               Literal(country.prime_minister.birth_loc)))
-        g.add((prime_minister_literal, URIRef(RDF_URI_PREFIX + "birth_date"),
-               Literal(country.prime_minister.date_of_birth)))
+        g.add((prime_minister_literal, URIRef(RDF_URI_PREFIX + "prime_minister_of"), country_literal))
+        if country.prime_minister.birth_loc:
+            g.add((prime_minister_literal, URIRef(RDF_URI_PREFIX + "birth_location"),
+                   URIRef(RDF_URI_PREFIX + country.prime_minister.birth_loc)))
+        if country.prime_minister.date_of_birth:
+            g.add((prime_minister_literal, URIRef(RDF_URI_PREFIX + "birth_date"),
+                   URIRef(RDF_URI_PREFIX + country.prime_minister.date_of_birth)))
 
-
-def create_ontologies(countries):
-    g = Graph()
-    for country in countries.values():
-        add_country_to_ontology(g, country)
-        print(f"finished building {country.name} ontology")
-
-    g.serialize(destination="ontology.nt")
-
-
-def get_all_data():
+def build_ontology():
     url = requests.get(URL_TO_COUNTRIES)
     doc = lxml.html.fromstring(url.content)
     return get_countries(doc)
 
-def send_xpath(country_name, xpath):
-    url = requests.get(f"https://en.wikipedia.org/wiki/{country_name}")
-    doc = lxml.html.fromstring(url.content)
-
-    for elem in doc.xpath(xpath):
-        print(str(elem))
-
-
 def test():
-    country = get_country("Guam")
-    create_ontologies({"Guam" : country})
+    g = Graph()
+    country = get_country("Papua_New_Guinea")
+    add_country_to_ontology(g, country)
+    g.serialize(destination="ontology.nt", format="nt", encoding="utf-8")
+
     print("finished")
 
 def test_results(countries):
@@ -95,16 +89,13 @@ def test_results(countries):
                 f.write(f"{country.name} has no president and no prime minister\n")
 
 if __name__ == '__main__':
-    isTestRun = True
+    isTestRun = False
     shouldTestResults = True
     if isTestRun:
         test()
     else:
         start = time.time()
-        countries = get_all_data()
-        create_ontologies(countries)
+        build_ontology()
         end = time.time()
-        if(shouldTestResults):
-            test_results(countries)
         print("time elapsed:", end - start)
 
