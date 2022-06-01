@@ -1,4 +1,5 @@
-import time
+import sys
+from QuestionsParser import *
 import lxml.html
 from rdflib import Graph, URIRef
 from Entities.Country import *
@@ -23,9 +24,7 @@ def get_countries(doc):
     for name in country_names:
         if not name in countries: #against duplicates
             countries[name] = Country(name)
-            print(f"finished fetching {name} data")
             add_country_to_ontology(g, countries[name])
-            print(f"added {name} data to ontology")
 
     g.serialize(destination="ontology.nt", format="nt", encoding="utf-8")
     return countries
@@ -66,36 +65,10 @@ def build_ontology():
     doc = lxml.html.fromstring(url.content)
     return get_countries(doc)
 
-def test():
-    g = Graph()
-    country = get_country("Papua_New_Guinea")
-    add_country_to_ontology(g, country)
-    g.serialize(destination="ontology.nt", format="nt", encoding="utf-8")
-
-    print("finished")
-
-def test_results(countries):
-    with open("log.txt", 'w') as f:
-        for country in countries.values():
-            if not country.area:
-                f.write(f"{country.name} has area: {country.area}\n")
-            if not country.population:
-                f.write(f"{country.name} has population: {country.population}\n")
-            if not country.capital:
-                f.write(f"{country.name} has capital {country.capital}\n")
-            if not country.gov_form:
-                f.write(f"{country.name} has gov_form: {country.gov_form}\n")
-            if not country.president and not country.prime_minister:
-                f.write(f"{country.name} has no president and no prime minister\n")
-
 if __name__ == '__main__':
-    isTestRun = False
-    shouldTestResults = True
-    if isTestRun:
-        test()
-    else:
-        start = time.time()
+    if sys.argv[3] == "create":
         build_ontology()
-        end = time.time()
-        print("time elapsed:", end - start)
+    if sys.argv[3] == "question":
+        AnswerQuestion(sys.argv[4])
+
 
